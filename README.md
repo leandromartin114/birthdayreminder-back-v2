@@ -1,6 +1,6 @@
 # Birthday Reminder Backend
 
-API REST built using NextJS through an MVC architecture. It allows a user to
+API REST built using Next.js through an MVC architecture. It allows a user to
 login/signup and save birthdays to be remembered by email.
 
 ## Postman Documentation
@@ -14,8 +14,8 @@ soon
 ## Tech Stack
 
 -   Typescript
--   NodeJS
--   NextJS
+-   Node.js
+-   Next.js
 -   MongoDB
 -   SendGrid
 -   jsonwebtoken
