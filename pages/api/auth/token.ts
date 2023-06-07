@@ -1,6 +1,6 @@
 import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getToken } from '@/controllers/auth.controller'
+import { getToken } from '@/controllers/auth-controller'
 import { emailCleaner } from '@/lib/utils'
 import { getTokenBodySchema } from '@/lib/yupSchemas'
 import { bodySchemaMiddleware, CORSMiddleware } from '@/middlewares'

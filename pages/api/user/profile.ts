@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import method from 'micro-method-router'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
-import { getProfileData } from '@/controllers/user.controller'
+import { getProfileData } from '@/controllers/user-controller'
 
 //Gets user info
 async function getHandler(
@@ -11,10 +11,10 @@ async function getHandler(
 ) {
     try {
         const userData = await getProfileData(token.userId)
-        if (userData) {
-            res.status(200).send(userData)
+        if (userData === 'Wrong or expired token') {
+            res.status(400).send({ message: 'Wrong or expired token' })
         } else {
-            res.status(400).send({ message: "There isn't user data" })
+            res.status(200).send(userData)
         }
     } catch (error) {
         res.status(400).send({ error: error })

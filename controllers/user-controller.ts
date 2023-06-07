@@ -1,13 +1,15 @@
-import Auth from '@/models/Auth.js'
+import connectToMongo from '@/database/mongo'
+import Auth from '@/models/Auth'
 import User from '@/models/User'
 
 // Gets the profile data
 export const getProfileData = async (userId: string) => {
     try {
         // searching for the user
+        await connectToMongo()
         const user = await User.findById(userId).exec()
         if (!user) {
-            return 'The user does not exist or invalid token'
+            return 'Wrong or expired token'
         }
         // return
         return user
@@ -25,9 +27,10 @@ export const updateProfileData = async (
 ) => {
     try {
         // searching for the user and auth
+        await connectToMongo()
         const user = await User.findById(userId).exec()
         if (!user) {
-            return 'The user does not exist or invalid token'
+            return 'Wrong or expired token'
         }
         const auth = await Auth.findOne({ userId: userId }).exec()
         // updating user and auth data
@@ -47,9 +50,10 @@ export const updateProfileData = async (
 export const getUsersBirthdays = async (userId: string) => {
     try {
         // searching for the user
+        await connectToMongo()
         const user = await User.findById(userId).exec()
         if (!user) {
-            return 'The user does not exist or invalid token'
+            return 'Wrong or expired token'
         }
         const birthdays = user.birthdays
         return birthdays

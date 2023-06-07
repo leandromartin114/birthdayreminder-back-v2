@@ -9,6 +9,7 @@
         "lint": "next lint",
         "test": "jest"
     },
+    "type": "module",
     "dependencies": {
         "@sendgrid/mail": "^7.7.0",
         "date-fns": "^2.30.0",

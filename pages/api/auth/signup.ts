@@ -1,6 +1,6 @@
 import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { signupAndSendCode } from '@/controllers/auth.controller'
+import { signupAndSendCode } from '@/controllers/auth-controller'
 import { bodySchemaMiddleware, CORSMiddleware } from '@/middlewares'
 import { newUserBodySchema } from '@/lib/yupSchemas'
 import { emailCleaner } from '@/lib/utils'
@@ -10,12 +10,12 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
     try {
         const email = emailCleaner(req.body.email)
         const code = await signupAndSendCode(email, req.body.fullName)
-        if (code) {
+        if (code.error) {
+            return res.status(400).send({ message: 'The user already exists' })
+        } else {
             return res
                 .status(200)
                 .send({ message: 'the code was sent to ' + email, code: code })
-        } else {
-            return res.status(400).send({ message: 'The user already exists' })
         }
     } catch (error) {
         return res.status(400).send({ error })

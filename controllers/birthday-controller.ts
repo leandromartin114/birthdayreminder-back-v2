@@ -1,7 +1,9 @@
-import { format } from 'date-fns'
-import { sendReminderByEmail } from '@/lib/sendgrid.js'
-import User from '@/models/User.js'
+// import { format } from 'date-fns'
+import format from 'date-fns/format'
+import { sendReminderByEmail } from '@/lib/sendgrid'
+import User from '@/models/User'
 import Day from '@/models/Day'
+import connectToMongo from '@/database/mongo'
 
 // Creates new birthday
 export const newBirthday = async (
@@ -11,6 +13,7 @@ export const newBirthday = async (
 ) => {
     try {
         // searching the user and saving the birthday
+        await connectToMongo()
         const newDate = format(new Date(date), 'MM-dd').toString()
         const user = await User.findById(userId).exec()
         const email = user.email
@@ -33,7 +36,7 @@ export const newBirthday = async (
         } else {
             day.birthdays.push(dayBirthday)
             await day.save()
-            // response
+            // return
             return true
         }
     } catch (error) {
@@ -50,6 +53,7 @@ export const deleteBirthday = async (
 ) => {
     try {
         // searching the user and deleting the birthday
+        await connectToMongo()
         const newDate = format(new Date(date), 'MM-dd').toString()
         const user = await User.findById(userId).exec()
         const userBirthdays = user.birthdays
@@ -81,10 +85,14 @@ export const deleteBirthday = async (
 // Sending reminders by email
 export const sendBirthdayReminders = async () => {
     try {
+        await connectToMongo()
         const date = format(new Date(), 'MM-dd').toString()
         const day = await Day.findOne({ date: date })
+        if (!day) {
+            return 'Nonexistent day'
+        }
         const birthdays = day.birthdays
-        if (!birthdays) {
+        if (!birthdays || birthdays.length === 0) {
             return 'No birthdays today'
         } else {
             birthdays.forEach((b: any) => {

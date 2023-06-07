@@ -1,9 +1,10 @@
 import gen from 'random-seed'
 import { addMinutes, isAfter } from 'date-fns'
-import { sendCodeByEmail } from '@/lib/sendgrid.js'
-import { generateToken } from '@/lib/jwt.js'
-import Auth from '@/models/Auth.js'
+import { sendCodeByEmail } from '@/lib/sendgrid'
+import { generateToken } from '@/lib/jwt'
+import Auth from '@/models/Auth'
 import User from '@/models/User'
+import connectToMongo from '@/database/mongo'
 
 const random = gen.create()
 
@@ -11,6 +12,7 @@ const random = gen.create()
 export const loginAndSendCode = async (email: string) => {
     try {
         // searching for an existing user
+        await connectToMongo()
         const auth = await Auth.findOne({ email: email }).exec()
         if (!auth) {
             throw { error: 'The user does not exist' }
@@ -35,6 +37,7 @@ export const loginAndSendCode = async (email: string) => {
 export const signupAndSendCode = async (email: string, fullName: string) => {
     try {
         // searching for an existing user
+        await connectToMongo()
         const auth = await Auth.findOne({ email: email }).exec()
         if (auth) {
             throw { error: 'The user already exists' }
@@ -70,6 +73,7 @@ export const signupAndSendCode = async (email: string, fullName: string) => {
 export const getToken = async (email: string, code: number) => {
     try {
         // searching for the user with a valid code
+        await connectToMongo()
         const auth = await Auth.find({ email: email, code: code }).exec()
         if (auth.length === 0) {
             return null

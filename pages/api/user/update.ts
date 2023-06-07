@@ -5,7 +5,7 @@ import {
     bodySchemaMiddleware,
     CORSMiddleware,
 } from '@/middlewares'
-import { updateProfileData } from '@/controllers/user.controller'
+import { updateProfileData } from '@/controllers/user-controller'
 import { newUserBodySchema } from '@/lib/yupSchemas'
 import { emailCleaner } from '@/lib/utils'
 

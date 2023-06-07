@@ -1,6 +1,6 @@
 import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { newBirthday } from '@/controllers/birthday.controller'
+import { newBirthday } from '@/controllers/birthday-controller'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
 
 //Creates a new birthday

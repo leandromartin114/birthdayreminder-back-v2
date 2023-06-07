@@ -20,7 +20,7 @@ export function decodeToken(token: string) {
     try {
         return jwt.verify(token, process.env.JWT_SECRET as string)
     } catch (error) {
-        console.error('Wrong token')
-        return error
+        console.error('Wrong or expired token')
+        return 'Wrong or expired token'
     }
 }
