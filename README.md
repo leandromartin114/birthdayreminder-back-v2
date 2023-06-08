@@ -5,11 +5,11 @@ login/signup and save birthdays to be remembered by email.
 
 ## Postman Documentation
 
-soon
+https://documenter.getpostman.com/view/20242333/2s93sabYtn
 
 ## API
 
-soon
+https://birthdayreminder-api.vercel.app/
 
 ## Tech Stack
 

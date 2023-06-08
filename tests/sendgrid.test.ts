@@ -1,4 +1,4 @@
-import { sendCodeByEmail, sendReminderByEmail } from './sendgrid'
+import { sendCodeByEmail, sendReminderByEmail } from '../lib/sendgrid'
 
 describe('SendGrid test', () => {
     test('it has to send the code and return true', async () => {

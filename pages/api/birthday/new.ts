@@ -18,7 +18,7 @@ async function postHandler(
         if (!birthday) {
             res.status(400).send({ message: 'There was a problem' })
         } else {
-            res.status(200).send({ message: 'Birthday saved' })
+            res.status(201).send({ message: 'Birthday saved' })
         }
     } catch (error) {
         res.status(400).send({ error: error })
