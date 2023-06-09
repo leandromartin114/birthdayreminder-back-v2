@@ -4,7 +4,7 @@ import { sendCodeByEmail } from '@/lib/sendgrid'
 import { generateToken } from '@/lib/jwt'
 import Auth from '@/models/Auth'
 import User from '@/models/User'
-import connectToMongo from '@/database/mongo'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 const random = gen.create()
 
@@ -24,6 +24,7 @@ export const loginAndSendCode = async (email: string) => {
         auth.code = code
         auth.expires = tenMinutesExpDate
         await auth.save()
+        await closeDBConnection()
         await sendCodeByEmail(email, code)
         // return
         return code
@@ -59,6 +60,7 @@ export const signupAndSendCode = async (email: string, fullName: string) => {
             expires: tenMinutesExpDate,
             userId: userId,
         })
+        await closeDBConnection()
         // sending the code
         await sendCodeByEmail(email, code)
         // return
@@ -89,6 +91,7 @@ export const getToken = async (email: string, code: number) => {
         const token = generateToken({ userId: auth[0].userId })
         auth[0].expires = now
         await auth[0].save()
+        await closeDBConnection()
         return token
     } catch (error) {
         console.error(error)

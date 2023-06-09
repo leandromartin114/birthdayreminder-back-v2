@@ -4,7 +4,7 @@ dotenv.config()
 
 const uri = process.env.MONGO_URI as string
 
-const connectToMongo = async () => {
+export const connectToMongo = async () => {
     try {
         mongoose.connect(uri)
         console.log('Connected to MongoDB')
@@ -13,4 +13,11 @@ const connectToMongo = async () => {
     }
 }
 
-export default connectToMongo
+export const closeDBConnection = async () => {
+    try {
+        mongoose.disconnect()
+        console.log('db connection closed')
+    } catch (error) {
+        console.error('Error in closeDBConnection => ', error)
+    }
+}

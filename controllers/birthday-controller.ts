@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { sendReminderByEmail } from '@/lib/sendgrid'
 import User from '@/models/User'
 import Day from '@/models/Day'
-import connectToMongo from '@/database/mongo'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 // Creates new birthday
 export const newBirthday = async (
@@ -39,6 +39,7 @@ export const newBirthday = async (
             // return
             return true
         }
+        await closeDBConnection()
     } catch (error) {
         console.error(error)
         return error
@@ -74,6 +75,7 @@ export const deleteBirthday = async (
         })
         day.birthdays = newDayBirthdays
         await day.save()
+        await closeDBConnection()
         // return
         return true
     } catch (error) {
@@ -95,6 +97,7 @@ export const sendBirthdayReminders = async () => {
         if (!birthdays || birthdays.length === 0) {
             return 'No birthdays today'
         }
+        await closeDBConnection()
         birthdays.forEach(async (b: any) => {
             await sendReminderByEmail(b.email, b.fullName)
         })
