@@ -1,5 +1,5 @@
-// import { format } from 'date-fns'
-import format from 'date-fns/format'
+// import format from 'date-fns/format'
+import { format } from 'date-fns'
 import { sendReminderByEmail } from '@/lib/sendgrid'
 import User from '@/models/User'
 import Day from '@/models/Day'
