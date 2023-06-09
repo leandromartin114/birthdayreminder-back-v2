@@ -98,8 +98,8 @@ export const sendBirthdayReminders = async () => {
             return 'No birthdays today'
         }
         await closeDBConnection()
-        birthdays.forEach(async (b: any) => {
-            await sendReminderByEmail(b.email, b.fullName)
+        await birthdays.forEach((b: any) => {
+            sendReminderByEmail(b.email, b.fullName)
         })
         return 'Remainders sended'
     } catch (error) {
