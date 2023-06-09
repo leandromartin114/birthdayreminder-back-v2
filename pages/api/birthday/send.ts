@@ -7,16 +7,22 @@ import { CORSMiddleware } from '@/middlewares'
 async function getHandler(req: NextApiRequest, res: NextApiResponse) {
     try {
         const send = await sendBirthdayReminders()
+        if (send.error) {
+            return res.status(400).send({ message: 'Error' })
+        }
         if (send === 'Nonexistent day') {
             res.status(200).send({ message: 'Nonexistent day' })
         }
         if (send === 'No birthdays today') {
             res.status(200).send({ message: 'No birthdays today' })
-        } else if (send === 'Remainders sended') {
+        }
+        if (send === 'Remainders sended') {
             res.status(200).send({ message: 'Remainders sended' })
+        } else {
+            return res.status(400).send({ message: 'There was a problem' })
         }
     } catch (error) {
-        res.status(400).send({ error: error })
+        return res.status(400).send({ error: error })
     }
 }
 
