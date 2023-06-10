@@ -37,3 +37,10 @@ export async function sendReminderByEmail(email: string, fullName: string) {
     await sgMail.send(msg)
     return true
 }
+
+// Sending all the reminders
+export async function sendAllReminders(array: []) {
+    array.forEach(async (b: any) => {
+        await sendReminderByEmail(b.email, b.fullName)
+    })
+}

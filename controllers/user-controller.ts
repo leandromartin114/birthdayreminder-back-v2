@@ -1,4 +1,3 @@
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
 import Auth from '@/models/Auth'
 import User from '@/models/User'
 
@@ -6,12 +5,10 @@ import User from '@/models/User'
 export const getProfileData = async (userId: string) => {
     try {
         // searching for the user
-        await connectToMongo()
         const user = await User.findById(userId).exec()
         if (!user) {
             return 'Wrong or expired token'
         }
-        await closeDBConnection()
         // return
         return user
     } catch (error) {
@@ -28,7 +25,6 @@ export const updateProfileData = async (
 ) => {
     try {
         // searching for the user and auth
-        await connectToMongo()
         const user = await User.findById(userId).exec()
         if (!user) {
             return 'Wrong or expired token'
@@ -40,7 +36,6 @@ export const updateProfileData = async (
         auth.email = email
         await user.save()
         await auth.save()
-        await closeDBConnection()
         return user
     } catch (error) {
         console.error(error)
@@ -52,13 +47,11 @@ export const updateProfileData = async (
 export const getUsersBirthdays = async (userId: string) => {
     try {
         // searching for the user
-        await connectToMongo()
         const user = await User.findById(userId).exec()
         if (!user) {
             return 'Wrong or expired token'
         }
         const birthdays = user.birthdays
-        await closeDBConnection()
         return birthdays
     } catch (error) {
         console.error(error)

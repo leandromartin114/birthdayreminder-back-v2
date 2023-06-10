@@ -1,9 +1,8 @@
 // import format from 'date-fns/format'
 import { format } from 'date-fns'
-import { sendReminderByEmail } from '@/lib/sendgrid'
+import { sendAllReminders } from '@/lib/sendgrid'
 import User from '@/models/User'
 import Day from '@/models/Day'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 // Creates new birthday
 export const newBirthday = async (
@@ -13,7 +12,6 @@ export const newBirthday = async (
 ) => {
     try {
         // searching the user and saving the birthday
-        await connectToMongo()
         const newDate = format(new Date(date), 'MM-dd').toString()
         const user = await User.findById(userId).exec()
         const email = user.email
@@ -39,7 +37,6 @@ export const newBirthday = async (
             // return
             return true
         }
-        await closeDBConnection()
     } catch (error) {
         console.error(error)
         return error
@@ -54,7 +51,6 @@ export const deleteBirthday = async (
 ) => {
     try {
         // searching the user and deleting the birthday
-        await connectToMongo()
         const newDate = format(new Date(date), 'MM-dd').toString()
         const user = await User.findById(userId).exec()
         const userBirthdays = user.birthdays
@@ -75,7 +71,6 @@ export const deleteBirthday = async (
         })
         day.birthdays = newDayBirthdays
         await day.save()
-        await closeDBConnection()
         // return
         return true
     } catch (error) {
@@ -87,7 +82,6 @@ export const deleteBirthday = async (
 // Sending reminders by email
 export const sendBirthdayReminders = async () => {
     try {
-        await connectToMongo()
         const date = format(new Date(), 'MM-dd').toString()
         const day = await Day.findOne({ date: date })
         if (!day) {
@@ -97,10 +91,7 @@ export const sendBirthdayReminders = async () => {
         if (!birthdays || birthdays.length === 0) {
             return 'No birthdays today'
         }
-        birthdays.forEach((b: any) => {
-            sendReminderByEmail(b.email, b.fullName)
-        })
-        await closeDBConnection()
+        await sendAllReminders(birthdays)
         return 'Remainders sended'
     } catch (error) {
         console.error(error)

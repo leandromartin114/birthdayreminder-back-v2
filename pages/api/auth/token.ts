@@ -4,10 +4,12 @@ import { getToken } from '@/controllers/auth-controller'
 import { emailCleaner } from '@/lib/utils'
 import { getTokenBodySchema } from '@/lib/yupSchemas'
 import { bodySchemaMiddleware, CORSMiddleware } from '@/middlewares'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 //Generates the token if the email and code match
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
     try {
+        await connectToMongo()
         const email = emailCleaner(req.body.email)
         const token = await getToken(email, req.body.code)
         if (!token) {
@@ -17,6 +19,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
         } else {
             res.status(200).send({ token })
         }
+        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }

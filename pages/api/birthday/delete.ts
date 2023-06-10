@@ -2,6 +2,7 @@ import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { deleteBirthday } from '@/controllers/birthday-controller'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 //Deletes a birthday
 async function deleteHandler(
@@ -10,6 +11,7 @@ async function deleteHandler(
     token: any
 ) {
     try {
+        await connectToMongo()
         const date = req.query.date as string
         const fullName = req.query.fullName as string
         const birthday = await deleteBirthday(token.userId, date, fullName)
@@ -18,6 +20,7 @@ async function deleteHandler(
         } else {
             res.status(200).send({ message: 'Birthday deleted' })
         }
+        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }

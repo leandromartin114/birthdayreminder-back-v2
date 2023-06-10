@@ -8,6 +8,7 @@ import {
 import { updateProfileData } from '@/controllers/user-controller'
 import { newUserBodySchema } from '@/lib/yupSchemas'
 import { emailCleaner } from '@/lib/utils'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 //Updates user info
 async function patchHandler(
@@ -16,6 +17,7 @@ async function patchHandler(
     token: any
 ) {
     try {
+        await connectToMongo()
         const email = emailCleaner(req.body.email)
         const userUpdated = await updateProfileData(
             token.userId,
@@ -23,6 +25,7 @@ async function patchHandler(
             req.body.fullName
         )
         res.status(200).send(userUpdated)
+        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }

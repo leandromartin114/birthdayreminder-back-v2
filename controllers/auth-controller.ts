@@ -4,7 +4,6 @@ import { sendCodeByEmail } from '@/lib/sendgrid'
 import { generateToken } from '@/lib/jwt'
 import Auth from '@/models/Auth'
 import User from '@/models/User'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 const random = gen.create()
 
@@ -12,7 +11,6 @@ const random = gen.create()
 export const loginAndSendCode = async (email: string) => {
     try {
         // searching for an existing user
-        await connectToMongo()
         const auth = await Auth.findOne({ email: email }).exec()
         if (!auth) {
             throw { error: 'The user does not exist' }
@@ -24,7 +22,6 @@ export const loginAndSendCode = async (email: string) => {
         auth.code = code
         auth.expires = tenMinutesExpDate
         await auth.save()
-        await closeDBConnection()
         await sendCodeByEmail(email, code)
         // return
         return code
@@ -38,7 +35,6 @@ export const loginAndSendCode = async (email: string) => {
 export const signupAndSendCode = async (email: string, fullName: string) => {
     try {
         // searching for an existing user
-        await connectToMongo()
         const auth = await Auth.findOne({ email: email }).exec()
         if (auth) {
             throw { error: 'The user already exists' }
@@ -60,7 +56,6 @@ export const signupAndSendCode = async (email: string, fullName: string) => {
             expires: tenMinutesExpDate,
             userId: userId,
         })
-        await closeDBConnection()
         // sending the code
         await sendCodeByEmail(email, code)
         // return
@@ -75,7 +70,6 @@ export const signupAndSendCode = async (email: string, fullName: string) => {
 export const getToken = async (email: string, code: number) => {
     try {
         // searching for the user with a valid code
-        await connectToMongo()
         const auth = await Auth.find({ email: email, code: code }).exec()
         if (auth.length === 0) {
             return null
@@ -91,7 +85,6 @@ export const getToken = async (email: string, code: number) => {
         const token = generateToken({ userId: auth[0].userId })
         auth[0].expires = now
         await auth[0].save()
-        await closeDBConnection()
         return token
     } catch (error) {
         console.error(error)

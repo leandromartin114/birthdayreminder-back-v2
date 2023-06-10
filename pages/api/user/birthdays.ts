@@ -2,6 +2,7 @@ import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getUsersBirthdays } from '@/controllers/user-controller'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 //Get user's appointment
 async function getHandler(
@@ -10,12 +11,14 @@ async function getHandler(
     token: any
 ) {
     try {
+        await connectToMongo()
         const birthdays = await getUsersBirthdays(token.userId)
         if (!birthdays) {
             res.status(400).send({ message: "The user doesn't have birthdays" })
         } else {
             res.status(200).send(birthdays)
         }
+        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }

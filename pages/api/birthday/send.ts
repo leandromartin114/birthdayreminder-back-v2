@@ -2,13 +2,15 @@ import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { sendBirthdayReminders } from '@/controllers/birthday-controller'
 import { CORSMiddleware } from '@/middlewares'
+import { connectToMongo, closeDBConnection } from '@/database/mongo'
 
 //Sends all birthdays
 async function getHandler(req: NextApiRequest, res: NextApiResponse) {
     try {
+        await connectToMongo()
         const send = await sendBirthdayReminders()
         if (send.error) {
-            return res.status(400).send({ message: 'Error' })
+            res.status(400).send({ message: 'Error' })
         }
         if (send === 'Nonexistent day') {
             res.status(200).send({ message: 'Nonexistent day' })
@@ -19,10 +21,11 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse) {
         if (send === 'Remainders sended') {
             res.status(200).send({ message: 'Remainders sended' })
         } else {
-            return res.status(400).send({ message: 'There was a problem' })
+            res.status(400).send({ message: 'There was a problem' })
         }
+        await closeDBConnection()
     } catch (error) {
-        return res.status(400).send({ error: error })
+        res.status(400).send({ error: error })
     }
 }
 
