@@ -91,8 +91,10 @@ export const sendBirthdayReminders = async () => {
         if (!birthdays || birthdays.length === 0) {
             return 'No birthdays today'
         }
-        await sendAllReminders(birthdays)
-        return 'Remainders sended'
+        const emailsSended = await sendAllReminders(birthdays)
+        if (emailsSended) {
+            return 'Remainders sended'
+        }
     } catch (error) {
         console.error(error)
         return error

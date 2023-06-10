@@ -9,7 +9,7 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse) {
     try {
         await connectToMongo()
         const send = await sendBirthdayReminders()
-        if (send.error) {
+        if (!send) {
             res.status(400).send({ message: 'Error' })
         } else if (send === 'Nonexistent day') {
             // res.status(200).send({ message: 'Nonexistent day' })

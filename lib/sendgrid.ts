@@ -43,4 +43,5 @@ export async function sendAllReminders(array: []) {
     array.forEach(async (b: any) => {
         await sendReminderByEmail(b.email, b.fullName)
     })
+    return true
 }
