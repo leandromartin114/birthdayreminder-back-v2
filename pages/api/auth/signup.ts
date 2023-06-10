@@ -4,7 +4,7 @@ import { signupAndSendCode } from '@/controllers/auth-controller'
 import { bodySchemaMiddleware, CORSMiddleware } from '@/middlewares'
 import { newUserBodySchema } from '@/lib/yupSchemas'
 import { emailCleaner } from '@/lib/utils'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
+import { connectToMongo } from '@/database/mongo'
 
 //Searches user and if it does not exist, creates a new one
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,7 +20,6 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
                 code: code,
             })
         }
-        await closeDBConnection()
     } catch (error) {
         return res.status(400).send({ error })
     }

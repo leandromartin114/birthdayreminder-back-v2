@@ -2,7 +2,7 @@ import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getUsersBirthdays } from '@/controllers/user-controller'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
+import { connectToMongo } from '@/database/mongo'
 
 //Get user's appointment
 async function getHandler(
@@ -18,7 +18,6 @@ async function getHandler(
         } else {
             res.status(200).send(birthdays)
         }
-        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }

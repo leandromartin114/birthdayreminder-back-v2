@@ -2,7 +2,7 @@ import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { newBirthday } from '@/controllers/birthday-controller'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
+import { connectToMongo } from '@/database/mongo'
 
 //Creates a new birthday
 async function postHandler(
@@ -22,7 +22,6 @@ async function postHandler(
         } else {
             res.status(201).send({ message: 'Birthday saved' })
         }
-        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { loginAndSendCode } from '@/controllers/auth-controller'
 import { emailCleaner } from '@/lib/utils'
 import { CORSMiddleware } from '@/middlewares'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
+import { connectToMongo } from '@/database/mongo'
 
 //Searches user by email and if it does exist generates a code and sends it by email
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +19,6 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
                 code: code,
             })
         }
-        await closeDBConnection()
     } catch (error) {
         return res.status(400).send({ message: 'error: ' + error })
     }

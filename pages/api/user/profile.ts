@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import method from 'micro-method-router'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
 import { getProfileData } from '@/controllers/user-controller'
-import { connectToMongo, closeDBConnection } from '@/database/mongo'
+import { connectToMongo } from '@/database/mongo'
 
 //Gets user info
 async function getHandler(
@@ -18,7 +18,6 @@ async function getHandler(
         } else {
             res.status(200).send(userData)
         }
-        await closeDBConnection()
     } catch (error) {
         res.status(400).send({ error: error })
     }
