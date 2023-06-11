@@ -2,7 +2,7 @@ import method from 'micro-method-router'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { deleteBirthday } from '@/controllers/birthday-controller'
 import { authMiddleware, CORSMiddleware } from '@/middlewares'
-import { connectToMongo } from '@/database/mongo'
+import connectToMongo from '@/database/mongo'
 
 //Deletes a birthday
 async function deleteHandler(

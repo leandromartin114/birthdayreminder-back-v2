@@ -4,7 +4,7 @@ import { getToken } from '@/controllers/auth-controller'
 import { emailCleaner } from '@/lib/utils'
 import { getTokenBodySchema } from '@/lib/yupSchemas'
 import { bodySchemaMiddleware, CORSMiddleware } from '@/middlewares'
-import { connectToMongo } from '@/database/mongo'
+import connectToMongo from '@/database/mongo'
 
 //Generates the token if the email and code match
 async function postHandler(req: NextApiRequest, res: NextApiResponse) {

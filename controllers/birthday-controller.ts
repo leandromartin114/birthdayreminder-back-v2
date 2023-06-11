@@ -85,15 +85,15 @@ export const sendBirthdayReminders = async () => {
         const date = format(new Date(), 'MM-dd').toString()
         const day = await Day.findOne({ date: date })
         if (!day) {
-            return 'Nonexistent day'
+            return null
         }
         const birthdays = day.birthdays
         if (!birthdays || birthdays.length === 0) {
-            return 'No birthdays today'
+            return false
         }
         const emailsSended = await sendAllReminders(birthdays)
         if (emailsSended) {
-            return 'Remainders sended'
+            return true
         }
     } catch (error) {
         console.error(error)

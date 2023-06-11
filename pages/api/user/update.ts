@@ -8,7 +8,7 @@ import {
 import { updateProfileData } from '@/controllers/user-controller'
 import { newUserBodySchema } from '@/lib/yupSchemas'
 import { emailCleaner } from '@/lib/utils'
-import { connectToMongo } from '@/database/mongo'
+import connectToMongo from '@/database/mongo'
 
 //Updates user info
 async function patchHandler(
